@@ -10,8 +10,6 @@ Building
 
 This builds the application and it's dependencies.
 
-`bash rel/var/bin/var <command>
+`bash rel/var/bin/var <command>`
 
-command = start
-        | stop
-        | console`
+`command = start | stop | console`
