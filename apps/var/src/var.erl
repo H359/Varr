@@ -4,4 +4,5 @@
 start() ->
     ok = application:start(ranch),
     ok = application:start(cowboy),
+    ok = application:start(eredis), %dunno if this is actually needed
     ok = application:start(var_app).

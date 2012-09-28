@@ -11,7 +11,8 @@
   {applications, [
                   kernel,
                   stdlib,
-                  cowboy
+                  cowboy,
+                  eredis
                  ]},
   {mod, { var_app, []}},
   {env, []}

@@ -6,3 +6,4 @@ priv
 *.plt
 rebar
 ebin
+rel/var
