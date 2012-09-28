@@ -4,7 +4,7 @@
 
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, terminate/2, handle_info/2, code_change/3, stop/1]).
--export([save_value/3]).
+-export([save_value/2]).
 
 % public api
 
@@ -23,8 +23,8 @@ stop() ->
 
 %% public client api
 
-save_value(Timestamp, Key, Value) ->
-  gen_server:call(?MODULE, {save_value, Timestamp, Key, Value}).
+save_value(Key, Value) ->
+  gen_server:call(?MODULE, {save_value, Key, Value}).
 
 %% genserver handles
 
@@ -32,8 +32,8 @@ save_value(Timestamp, Key, Value) ->
 %   Response = eredis:q(Redis, ["GET", get_key(Api, Method)]),
 %   {reply, Response, Redis};
 
-handle_call({save_value, Timestamp, Key, Value}, _From, Redis) ->
-  Response = eredis:q(Redis, ["SET", create_key(Timestamp, Key), Value]),
+handle_call({save_value, _Key, Value}, _From, Redis) ->
+  Response = eredis:q(Redis, ["SET", create_key(), Value]),
   {reply, Response, Redis};
 
 handle_call(_Message, _From, Redis) ->
@@ -46,5 +46,7 @@ code_change(_OldVersion, Redis, _Extra) -> {ok, Redis}.
 
 %% Additional function for generating keys
 
-create_key(Timestamp, Key) -> 
-    "test_key".
+create_key() -> 
+    {Sec1, Sec2, Sec3} = now(),
+    ToRet = erlang:iolist_to_binary(io_lib:format("~w~w~w", [Sec1,Sec2,Sec3])),
+    ToRet.

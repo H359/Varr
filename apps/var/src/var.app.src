@@ -1,6 +1,6 @@
 {application, var,
  [
-  {description, "Var - simple and lightweight http daemon"},
+  {description, "Var - http logging daemon"},
   {vsn, "1"},
   {registered, []},
   {modules, [
@@ -14,7 +14,8 @@
                   kernel,
                   stdlib,
                   cowboy,
-                  eredis
+                  eredis,
+                  json
                  ]},
   {mod, { var_app, []}},
   {env, []}
