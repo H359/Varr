@@ -6,7 +6,9 @@
   {modules, [
              var,
              var_app,
-             var_sup
+             var_sup,
+             storage,
+             storage_sup
             ]},
   {applications, [
                   kernel,

@@ -8,6 +8,7 @@ init(_Transport, Req, []) ->
     {ok, Req, undefined}.
 
 handle(Req, State) ->
+    io:format("~w~n", [State]),
     {Method, Req2} = cowboy_req:method(Req),
     {Echo, Req3} = cowboy_req:qs_val(<<"echo">>, Req2),
     {ok, Req4} = echo(Method, Echo, Req3),
