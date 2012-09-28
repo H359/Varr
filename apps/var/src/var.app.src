@@ -1,0 +1,21 @@
+{application, var,
+ [
+  {description, "Var - simple and lightweight http daemon"},
+  {vsn, "1"},
+  {registered, []},
+  {modules, [
+             var,
+             var_app,
+             var_sup
+            ]},
+  {applications, [
+                  kernel,
+                  stdlib,
+                  cowboy
+                 ]},
+  {mod, { var_app, []}},
+  {env, []}
+ ]}.
+
+
+ 
