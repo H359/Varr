@@ -16,7 +16,7 @@ start(_StartType, _StartArgs) ->
         ]}
     ],
     Port = var:get_config_value(http_port, 8080),
-    {ok, _} = cowboy:start_http(http, 100, [{port, 8080}], [
+    {ok, _} = cowboy:start_http(http, 100, [{port, Port}], [
         {dispatch, Dispatch}
     ]),
     storage_sup:start_link(),

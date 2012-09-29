@@ -13,11 +13,12 @@ handle(Req, State) ->
     {ok, Parsed} = json:decode(Data), %parse the data we've found
     {ok, Token} = token(Parsed), %we get token out of JSON parsed data, we'll need it later on
     Parsed2 = update_token_info(Token, Parsed),
-    {ok, Req4} = store(Method, Parsed2, Req3), %now we store stuff
+    Parsed3 = update_time_info(Parsed2),
+    {ok, Req4} = store(Method, Parsed3, Req3), %now we store stuff
     {ok, Req4, State}.
 
 store(<<"POST">>, Data, Req) -> 
-    storage:save_value(generate_token(), json:encode({Data})), %TODO: rewrite save_value since we don't provide keys here, we generate them
+    storage:save_value(generate_token(), json:encode(Data)), %TODO: rewrite save_value since we don't provide keys here, we generate them
     cowboy_req:reply(200,
         [{<<"Content-Encoding">>, <<"utf-8">>}], <<"OK">>, Req); %TODO: form and send reply
 
@@ -38,7 +39,12 @@ token({Json}) ->
     end.
 
 update_token_info(Token, {Parsed}) ->
-    orddict:update(<<"token">>, fun(_) -> Token end, Token, Parsed).
+    {orddict:update(<<"token">>, fun(_) -> Token end, Token, Parsed)}.
 
 generate_token() ->
     lists:flatten(io_lib:format("~w~w", [self(), crypto:rand_bytes(16)])).
+
+update_time_info({Parsed}) ->
+    {{Yr, Mt, Dy},{H, M, S}} = {date(), time()},
+    NewValue = [Yr, Mt, Dy, H, M, S],
+    {orddict:update(<<"server_time">>, fun(_) -> NewValue end, NewValue, Parsed)}.

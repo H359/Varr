@@ -1,10 +1,11 @@
 -module(var).
 -export([start/0]).
+-export([get_config_value/2]).
 
 start() ->
     ok = application:start(ranch),
     ok = application:start(cowboy),
-    ok = application:start(eredis), %dunno if this is actually needed
+    ok = application:start(eredis),
     ok = application:start(var_app).
 
 get_config_value(Key, Default) ->
