@@ -32,8 +32,8 @@ save_value(Key, Value) ->
 %   Response = eredis:q(Redis, ["GET", get_key(Api, Method)]),
 %   {reply, Response, Redis};
 
-handle_call({save_value, _Key, Value}, _From, Redis) ->
-  Response = eredis:q(Redis, ["SET", create_key(), Value]),
+handle_call({save_value, Key, Value}, _From, Redis) ->
+  Response = eredis:q(Redis, ["SET", Key, Value]),
   {reply, Response, Redis};
 
 handle_call(_Message, _From, Redis) ->
@@ -43,10 +43,3 @@ handle_cast(_Message, Redis) -> {noreply, Redis}.
 handle_info(_Message, Redis) -> {noreply, Redis}.
 terminate(_Reason, _Redis) -> ok.
 code_change(_OldVersion, Redis, _Extra) -> {ok, Redis}.
-
-%% Additional function for generating keys
-
-create_key() -> 
-    {Sec1, Sec2, Sec3} = now(),
-    ToRet = erlang:iolist_to_binary(io_lib:format("~w~w~w", [Sec1,Sec2,Sec3])),
-    ToRet.
