@@ -15,6 +15,7 @@ start(_StartType, _StartArgs) ->
             {[], toppage_handler, []}
         ]}
     ],
+    Port = var:get_config_value(http_port, 8080),
     {ok, _} = cowboy:start_http(http, 100, [{port, 8080}], [
         {dispatch, Dispatch}
     ]),
