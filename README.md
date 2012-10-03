@@ -18,6 +18,7 @@ File `rel/files/sys.config` is responsible for managing the application config.
 Right now application supports following config variables:
 
  * `http_port` - specifies a port on which the server will listen
+ * `parser_pool_size` - specifies size of parser workers pool
 
 Usage
 -----
