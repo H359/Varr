@@ -24,7 +24,7 @@ stop() ->
 %% public client api
 
 save_value(Key, Value) ->
-  gen_server:call(?MODULE, {save_value, Key, Value}).
+  gen_server:cast(?MODULE, {save_value, Key, Value}).
 
 %% genserver handles
 
@@ -39,7 +39,13 @@ handle_call({save_value, Key, Value}, _From, Redis) ->
 handle_call(_Message, _From, Redis) ->
   {reply, error, Redis}.
 
-handle_cast(_Message, Redis) -> {noreply, Redis}.
+handle_cast({save_value, Key, Value}, Redis) ->
+  eredis:q(Redis, ["SET", Key, Value]),
+  {noreply, Redis};
+
+handle_cast(_Meesage, Redis) ->
+  {noreply, Redis}.
+
 handle_info(_Message, Redis) -> {noreply, Redis}.
 terminate(_Reason, _Redis) -> ok.
 code_change(_OldVersion, Redis, _Extra) -> {ok, Redis}.

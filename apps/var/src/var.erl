@@ -6,6 +6,7 @@ start() ->
     ok = application:start(ranch),
     ok = application:start(cowboy),
     ok = application:start(eredis),
+    ok = application:start(hottub),
     ok = application:start(var_app).
 
 get_config_value(Key, Default) ->

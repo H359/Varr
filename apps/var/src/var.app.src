@@ -15,6 +15,7 @@
                   stdlib,
                   cowboy,
                   eredis,
+                  hottub,
                   json
                  ]},
   {mod, { var_app, []}},

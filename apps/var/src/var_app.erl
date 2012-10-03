@@ -19,7 +19,9 @@ start(_StartType, _StartArgs) ->
     {ok, _} = cowboy:start_http(http, 100, [{port, Port}], [
         {dispatch, Dispatch}
     ]),
+    hottub:start_link(parser, 10, parser, start_link, []),
     storage_sup:start_link(),
+    parser_sup:start_link(),
     var_sup:start_link().
 
 stop(_State) ->
