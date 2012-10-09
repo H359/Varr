@@ -13,7 +13,7 @@ init(_Transport, Req, []) ->
     % RFC 6455
     % Upgrade: websocket
     case cowboy_req:header(<<"Upgrade">>, Req) of
-        {<<"websocket">>, Req2} -> {upgrade, protocol, cowboy_websocket};
+        {<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_websocket};
         _ -> {ok, Req, undefined}
     end.
 
@@ -32,7 +32,8 @@ websocket_init(_Transport, Req, _Opts) ->
     {ok, Req, undefined_state}.
 
 websocket_handle({text, Msg}, Req, State) ->
-    store(<<"WEBSOCKET">>, Msg, Req); %don't like the magic "WEBSOCKET" here; TODO: find a suitable approach
+    store(<<"WEBSOCKET">>, Msg, Req),
+    {reply, {text, <<"OK">>}, Req, State}; %don't like the magic "WEBSOCKET" here; TODO: find a suitable approach
 
 websocket_handle(_Data, Req, State) ->
     {ok, Req, State}.
@@ -51,9 +52,8 @@ store(<<"POST">>, Data, Req) ->
     cowboy_req:reply(200,
         [{<<"Content-Encoding">>, <<"utf-8">>}], <<"OK">>, Req); %TODO: form and send reply
 
-store(<<"WEBSOCKET">>, Data, Req) ->
-    _Json = hottub:call(parser, {process_json, Data}),
-    {reply, {text, <<"OK">>}, Req, State};
+store(<<"WEBSOCKET">>, Data, _Req) ->
+    _Json = hottub:call(parser, {process_json, Data});
 
 store(_, _, Req) ->
     %% Method not allowed.
