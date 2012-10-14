@@ -12,7 +12,7 @@
 start(_StartType, _StartArgs) ->
     Dispatch = [
         {'_', [
-            {[], toppage_handler, []}
+            {'_', toppage_handler, []}
         ]}
     ],
     Port = var:get_config_value(http_port, 8080),

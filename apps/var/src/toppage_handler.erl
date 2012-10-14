@@ -57,4 +57,5 @@ store(<<"WEBSOCKET">>, Data, _Req) ->
 
 store(_, _, Req) ->
     %% Method not allowed.
+    io:format("Not allowed method case hit~n", []),
     cowboy_req:reply(405, Req).
