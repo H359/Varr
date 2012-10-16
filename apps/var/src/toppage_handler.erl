@@ -9,13 +9,7 @@
 % ordinary HTTP section
 
 init(_Transport, Req, []) ->
-    % We check for a specific websocket header here
-    % RFC 6455
-    % Upgrade: websocket
-    case cowboy_req:header(<<"Upgrade">>, Req) of
-        {<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_websocket};
-        _ -> {ok, Req, undefined}
-    end.
+    {ok, Req, undefined}.
 
 handle(Req, State) ->
     {Method, Req2} = cowboy_req:method(Req), %access the method
