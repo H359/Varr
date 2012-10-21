@@ -12,9 +12,9 @@
 start(_StartType, _StartArgs) ->
     Dispatch = [
         {'_', [
-            {'_', toppage_handler, []},
             {[<<"socket.io">>, <<"1">>], handshake_handler, []},
-            {[<<"socket.io">>, <<"1">>, <<"websocket">>, '...'], websocket_handler, []}
+            {[<<"socket.io">>, <<"1">>, <<"websocket">>, '...'], websocket_handler, []},
+            {'_', toppage_handler, []}
         ]}
     ],
     Port = varr:get_config_value(http_port, 8080),
