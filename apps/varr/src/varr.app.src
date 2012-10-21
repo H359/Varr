@@ -1,12 +1,12 @@
-{application, var,
+{application, varr,
  [
-  {description, "Var - http logging daemon"},
+  {description, "Varr - http logging daemon"},
   {vsn, "1"},
   {registered, []},
   {modules, [
-             var,
-             var_app,
-             var_sup,
+             varr,
+             varr_app,
+             varr_sup,
              storage,
              storage_sup
             ]},
@@ -18,7 +18,7 @@
                   hottub,
                   json
                  ]},
-  {mod, { var_app, []}},
+  {mod, { varr_app, []}},
   {env, []}
  ]}.
 

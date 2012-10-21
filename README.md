@@ -23,10 +23,11 @@ Right now application supports following config variables:
 Usage
 -----
 
-    bash rel/var/bin/var <command>
+    bash rel/varr/bin/varr <command>
 
     command = start | stop | console
 
 `start` starts the daemon (default port is 8080), `stop` stops it, `console` starts a process with Erlang REPL attached to it.
 
 Server listens for POST messages containing JSON, generates key for them and places body of the request, as well as some additional info, into the redis database.
+

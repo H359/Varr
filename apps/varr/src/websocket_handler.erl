@@ -29,20 +29,18 @@ websocket_init(_Any, Req, []) ->
     session_server:cast({SessionId, self(), subscribe, websocket}),
     {ok, Req, undefined, hibernate}.
 
-
 websocket_handle({text, Data}, Req, State) ->
     SessionId = get_session(Req),
     Msg = binary_to_list(Data),
-
     HandleMsg = common_polling:do_post_msg({SessionId, Msg}),
     Endpoint = session_server:call({SessionId, getEndpoint}),
     Result = string:join(["5:", Endpoint, HandleMsg], ":"),
     BinaryResult = list_to_binary(Result),
     {reply, {text, BinaryResult}, Req, State, hibernate};
+
 websocket_handle(_, Req, State) ->
     %lager:debug("has nothing to do here", []),
     {ok, Req, State}.
-
 
 websocket_info({reply, first}, Req, State) ->
     SessionId = get_session(Req),

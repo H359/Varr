@@ -1,4 +1,4 @@
--module(var_sup).
+-module(varr_sup).
 
 -behaviour(supervisor).
 

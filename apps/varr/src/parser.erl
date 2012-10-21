@@ -51,7 +51,7 @@ update_token_info(Token, {Json}) ->
     {orddict:update(<<"token">>, fun(_) -> Token end, Token, Json)}.
 
 generate_token() ->
-    lists:flatten(io_lib:format("~w~w", [self(), crypto:rand_bytes(16)])).
+    uuid_server:gen().
 
 update_time_info({Json}) ->
     {{Yr, Mt, Dy},{H, M, S}} = {date(), time()},

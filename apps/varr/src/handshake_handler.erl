@@ -27,7 +27,7 @@ do_request([<<"socket.io">>, <<"1">>], Req) ->
     SessionId = uuid_server:gen(),
     session_server:register(SessionId),
     common_polling:set_timeout(SessionId),
-    Msg = io_lib:format("~s:~p:~p:~s", [SessionId, var:get_env(heartbeat_timeout), var:get_env(close_timeout), var:get_env(allow_transports)]),
+    Msg = io_lib:format("~s:~p:~p:~s", [SessionId, varr:get_env(heartbeat_timeout), varr:get_env(close_timeout), varr:get_env(allow_transports)]),
     OutputVal = list_to_binary(Msg),
     cowboy_http_req:reply(200, [{<<"Content-Type">>, <<"text/plain; charset=utf-8">>}], OutputVal, Req);
 

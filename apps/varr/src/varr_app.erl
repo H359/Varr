@@ -1,4 +1,4 @@
--module(var_app).
+-module(varr_app).
 
 -behaviour(application).
 
@@ -17,15 +17,18 @@ start(_StartType, _StartArgs) ->
             {[<<"socket.io">>, <<"1">>, <<"websocket">>, '...'], websocket_handler, []}
         ]}
     ],
-    Port = var:get_config_value(http_port, 8080),
+    Port = varr:get_config_value(http_port, 8080),
     {ok, _} = cowboy:start_http(http, 100, [{port, Port}], [
         {dispatch, Dispatch}
     ]),
-    ParserPoolSize = var:get_config_value(parser_pool_size, 10),
+    ParserPoolSize = varr:get_config_value(parser_pool_size, 10),
     hottub:start_link(parser, ParserPoolSize, parser, start_link, []),
     storage_sup:start_link(),
     parser_sup:start_link(),
-    var_sup:start_link().
+    uuid_server:start(),
+    endpoint_server:start(),
+    session_server:start(),
+    varr_sup:start_link().
 
 stop(_State) ->
     ok.
