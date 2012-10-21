@@ -8,17 +8,17 @@
 -export([websocket_init/3, websocket_handle/3,
     websocket_info/3, websocket_terminate/3]).
 
--define(HEARTBEAT_INTERVAL, socketio:get_env(heartbeat_interval)*1000).
+-define(HEARTBEAT_INTERVAL, varr:get_env(heartbeat_interval)*1000).
 
 init({_Any, http}, Req, []) ->
-    case cowboy_http_req:header('Upgrade', Req) of
+    case cowboy_req:header('Upgrade', Req) of
         {undefined, Req2} -> {ok, Req2, undefined};
-        {<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket};
-        {<<"WebSocket">>, _Req2} -> {upgrade, protocol, cowboy_http_websocket}
+        {<<"websocket">>, _Req2} -> {upgrade, protocol, cowboy_websocket};
+        {<<"WebSocket">>, _Req2} -> {upgrade, protocol, cowboy_websocket}
     end.
 
 handle(Req, State) ->
-    {ok, Req2} = cowboy_http_req:reply(200, [{'Content-Type', <<"text/html">>}], <<"503">>, Req),
+    {ok, Req2} = cowboy_req:reply(200, [{'Content-Type', <<"text/html">>}], <<"503">>, Req),
     {ok, Req2, State}.
 
 terminate(_Req, _State) ->
@@ -58,5 +58,5 @@ websocket_terminate(_Reason, _Req, _State) ->
     ok.
 
 get_session(Req) ->
-    {[_, _, _, SessionId], _} = cowboy_http_req:path(Req),
+    {[_, _, _, SessionId], _} = cowboy_req:path(Req),
     binary_to_list(SessionId).
