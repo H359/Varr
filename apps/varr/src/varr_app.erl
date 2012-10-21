@@ -14,7 +14,30 @@ start(_StartType, _StartArgs) ->
         {'_', [
             {[<<"socket.io">>, <<"1">>], handshake_handler, []},
             {[<<"socket.io">>, <<"1">>, <<"websocket">>, '...'], websocket_handler, []},
-            {'_', toppage_handler, []}
+            %% just server socket.io's static files, eg: socket.io.js, WebSocketMain.swf, WebSocketMainInsecure.swf
+            {[<<"socket.io">>, <<"static">>, '...'], cowboy_static, [
+                {directory, {priv_dir, ?MODULE, [<<"static">>]}},
+                {mimetypes, [
+                    {<<".js">>, [<<"application/x-javascript">>]},
+                    {<<".swf">>, [<<"application/x-shockwave-flash">>]}
+                ]}
+            ]},
+            {[<<"top">>], toppage_handler, []},
+            {['...'], cowboy_static, [
+                {directory, {priv_dir, varr, [<<"www">>]}},
+                {mimetypes, [
+                    {<<".htm">>, [<<"text/html">>]},
+                    {<<".html">>, [<<"text/html">>]},
+                    {<<".css">>, [<<"text/css">>]},
+                    {<<".js">>, [<<"application/x-javascript">>]},
+                    {<<".jpeg">>, [<<"image/jpeg">>]},
+                    {<<".jpg">>, [<<"image/jpeg">>]},
+                    {<<".ico">>, [<<"image/x-icon">>]},
+                    {<<".gif">>, [<<"image/gif">>]},
+                    {<<".png">>, [<<"image/png">>]},
+                    {<<".swf">>, [<<"application/x-shockwave-flash">>]}
+                ]}
+            ]}
         ]}
     ],
     Port = varr:get_config_value(http_port, 8080),
