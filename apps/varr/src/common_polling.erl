@@ -1,7 +1,7 @@
 -module(common_polling).
 -export([timeout_call/1, set_timeout/1, set_timeout/2, do_post_msg/1]).
--define(HEARBEAT_INTERVAL, socketio:get_env(heartbeat_interval)*1000).
--define(HEARBEAT_TIMEOUT, socketio:get_env(heartbeat_timeout)*1000).
+-define(HEARBEAT_INTERVAL, varr:get_env(heartbeat_interval)*1000).
+-define(HEARBEAT_TIMEOUT, varr:get_env(heartbeat_timeout)*1000).
 
 do_post_msg({SessionId, Msg}) ->
     {[Type, MessageId, Endpoint, SubMsgData]} = socketio_interface:decode(Msg),

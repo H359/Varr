@@ -6,13 +6,13 @@ init({_, http}, Req, State) ->
     {ok, Req, State}.
 
 handle(Req, State) ->
-    {Method, _} = cowboy_http_req:method(Req),
-    {Tokens, _} = cowboy_http_req:path(Req),
+    {Method, _} = cowboy_req:method(Req),
+    {Tokens, _} = cowboy_req:path(Req),
     case Method of
         'POST' ->
             {ok, Req3} = do_post(Tokens, Req);
         'GET' ->
-            {ok, Req2} = cowboy_http_req:set_resp_header(<<"Connection">>, <<"keep-alive">>, Req),
+            {ok, Req2} = cowboy_req:set_resp_header(<<"Connection">>, <<"keep-alive">>, Req),
             {ok, Req3} = do_request(Tokens, Req2);
         _ ->
             Req3 = Req
@@ -21,7 +21,7 @@ handle(Req, State) ->
 
 
 do_post(_, Req) ->
-    cowboy_http_req:reply(404, Req).
+    cowboy_req:reply(404, Req).
 
 do_request([<<"socket.io">>, <<"1">>], Req) ->
     SessionId = uuid_server:gen(),
@@ -29,10 +29,10 @@ do_request([<<"socket.io">>, <<"1">>], Req) ->
     common_polling:set_timeout(SessionId),
     Msg = io_lib:format("~s:~p:~p:~s", [SessionId, varr:get_env(heartbeat_timeout), varr:get_env(close_timeout), varr:get_env(allow_transports)]),
     OutputVal = list_to_binary(Msg),
-    cowboy_http_req:reply(200, [{<<"Content-Type">>, <<"text/plain; charset=utf-8">>}], OutputVal, Req);
+    cowboy_req:reply(200, [{<<"Content-Type">>, <<"text/plain; charset=utf-8">>}], OutputVal, Req);
 
 do_request(_, Req) ->
-    cowboy_http_req:reply(404, Req).
+    cowboy_req:reply(404, Req).
 
 terminate(_Req, _State) ->
     ok.
