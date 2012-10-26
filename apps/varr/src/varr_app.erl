@@ -12,8 +12,6 @@
 start(_StartType, _StartArgs) ->
     Dispatch = [
         {'_', [
-            {[<<"socket.io">>, <<"1">>], handshake_handler, []},
-            {[<<"socket.io">>, <<"1">>, <<"websocket">>, '...'], websocket_handler, []},
             {'_', toppage_handler, []}
         ]}
     ],
@@ -26,7 +24,6 @@ start(_StartType, _StartArgs) ->
     storage_sup:start_link(),
     parser_sup:start_link(),
     uuid_server:start(),
-    endpoint_server:start(),
     session_server:start(),
     varr_sup:start_link().
 
