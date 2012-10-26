@@ -9,10 +9,10 @@ handle(Req, State) ->
     {Method, _} = cowboy_req:method(Req),
     {Tokens, _} = cowboy_req:path(Req),
     case Method of
-        'POST' ->
+        <<"POST">> ->
             {ok, Req3} = do_post(Tokens, Req);
-        'GET' ->
-            {ok, Req2} = cowboy_req:set_resp_header(<<"Connection">>, <<"keep-alive">>, Req),
+        <<"GET">> ->
+            Req2 = cowboy_req:set_resp_header(<<"Connection">>, <<"keep-alive">>, Req),
             {ok, Req3} = do_request(Tokens, Req2);
         _ ->
             Req3 = Req
@@ -23,7 +23,7 @@ handle(Req, State) ->
 do_post(_, Req) ->
     cowboy_req:reply(404, Req).
 
-do_request([<<"socket.io">>, <<"1">>], Req) ->
+do_request(<<"/socket.io/1/">>, Req) ->
     SessionId = uuid_server:gen(),
     session_server:register(SessionId),
     common_polling:set_timeout(SessionId),

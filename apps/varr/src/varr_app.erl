@@ -51,6 +51,9 @@ start(_StartType, _StartArgs) ->
     uuid_server:start(),
     endpoint_server:start(),
     session_server:start(),
+
+    endpoint_server:register("/varr", varr_impl),
+
     varr_sup:start_link().
 
 stop(_State) ->
