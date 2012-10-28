@@ -15,11 +15,11 @@ start(_StartType, _StartArgs) ->
             {'_', toppage_handler, []}
         ]}
     ],
-    Port = varr:get_config_value(http_port, 8080),
+    Port = varr:get_env(http_port, 8080),
     {ok, _} = cowboy:start_http(http, 100, [{port, Port}], [
         {dispatch, Dispatch}
     ]),
-    ParserPoolSize = varr:get_config_value(parser_pool_size, 10),
+    ParserPoolSize = varr:get_env(parser_pool_size, 10),
     hottub:start_link(parser, ParserPoolSize, parser, start_link, []),
     storage_sup:start_link(),
     parser_sup:start_link(),
