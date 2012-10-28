@@ -14,7 +14,22 @@ start(_StartType, _StartArgs) ->
     Dispatch = [
         {'_', [
             {[<<"store">>, '...'], sockjs_cowboy_handler, SockJSState},
-            {'_', toppage_handler, []}
+            {[<<"top">>], toppage_handler, []},
+            {['...'], cowboy_static, [
+                {directory, {priv_dir, varr, [<<"www">>]}},
+                {mimetypes, [
+                    {<<".htm">>, [<<"text/html">>]},
+                    {<<".html">>, [<<"text/html">>]},
+                    {<<".css">>, [<<"text/css">>]},
+                    {<<".js">>, [<<"application/x-javascript">>]},
+                    {<<".jpeg">>, [<<"image/jpeg">>]},
+                    {<<".jpg">>, [<<"image/jpeg">>]},
+                    {<<".ico">>, [<<"image/x-icon">>]},
+                    {<<".gif">>, [<<"image/gif">>]},
+                    {<<".png">>, [<<"image/png">>]},
+                    {<<".swf">>, [<<"application/x-shockwave-flash">>]}
+                ]}
+            ]}
         ]}
     ],
     Port = varr:get_env(http_port, 8080),
