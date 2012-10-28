@@ -8,13 +8,14 @@ start() ->
     ok = application:start(cowboy),
     ok = application:start(eredis),
     ok = application:start(hottub),
+    ok = application:start(sockjs),
     ok = application:start(varr_app).
 
 get_env(Key, Default) ->
     case get_env(Key) of
         Value -> Value;
         undefined -> Default
-    end;
+    end.
 
 get_env(Key) ->
     case application:get_env(varr, Key) of
