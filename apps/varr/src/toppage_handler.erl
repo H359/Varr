@@ -9,7 +9,22 @@
 % ordinary HTTP section
 
 init(_Transport, Req, []) ->
-    {ok, Req, undefined}.
+    {Upgrade, Req1} = cowboy_req:header(<<"upgrade">>, Req),
+    case Upgrade of
+        <<"Websocket">> ->
+            {upgrade, protocol, cowboy_websocket},
+        undefined ->
+            {ok, Req1, undefined}
+    end;
+    
+init({tcp, http}, Req, [poll]) ->
+    {Upgrade, Req1} = cowboy_req:header(<<"upgrade">>, Req),
+    case Upgrade of
+        <<"Websocket">> -> 
+            {upgrade, protocol, cowboy_websocket},
+        undefined ->
+            {ok, Req1, poll}
+    end.
 
 handle(Req, State) ->
     {Method, Req2} = cowboy_req:method(Req), %access the method
