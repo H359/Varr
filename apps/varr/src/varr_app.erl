@@ -10,8 +10,10 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
+    SockJSState = sockjs_handler:init_state(<<"/store">>, fun toppage_handler:process_ws/3, state, []),
     Dispatch = [
         {'_', [
+            {[<<"store">>, '...'], sockjs_cowboy_handler, SockJSState},
             {'_', toppage_handler, []}
         ]}
     ],

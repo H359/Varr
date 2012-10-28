@@ -6,13 +6,15 @@
 %websockets handling
 -export([websocket_init/3, websocket_handle/3, websocket_info/3, websocket_terminate/3]).
 
+-export([process_ws/3]).
+
 % ordinary HTTP section
 
 init(_Transport, Req, []) ->
     {Upgrade, Req1} = cowboy_req:header(<<"upgrade">>, Req),
     case Upgrade of
         <<"Websocket">> ->
-            {upgrade, protocol, cowboy_websocket},
+            {upgrade, protocol, cowboy_websocket};
         undefined ->
             {ok, Req1, undefined}
     end;
@@ -21,7 +23,7 @@ init({tcp, http}, Req, [poll]) ->
     {Upgrade, Req1} = cowboy_req:header(<<"upgrade">>, Req),
     case Upgrade of
         <<"Websocket">> -> 
-            {upgrade, protocol, cowboy_websocket},
+            {upgrade, protocol, cowboy_websocket};
         undefined ->
             {ok, Req1, poll}
     end.
@@ -52,6 +54,18 @@ websocket_info(_Info, Req, State) ->
 
 websocket_terminate(_Reason, _Req, _State) ->
     ok.
+
+% sockJS handlers
+
+process_ws(_Conn, init, state) ->
+    {ok, state};
+
+process_ws(Conn, {recv, Data}, state) ->
+    _Json = hottub:call(parser, {process_json, Data}),
+    Conn:send(<<"ok">>);
+
+process_ws(_Conn, closed, state) ->
+    {ok, state}.
 
 % inner API
 

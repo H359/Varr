@@ -16,6 +16,7 @@
                   cowboy,
                   eredis,
                   hottub,
+                  sockjs,
                   json
                  ]},
   {mod, { varr_app, []}},

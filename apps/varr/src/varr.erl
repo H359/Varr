@@ -13,8 +13,8 @@ start() ->
 
 get_env(Key, Default) ->
     case get_env(Key) of
-        Value -> Value;
-        undefined -> Default
+        undefined -> Default;
+        Value -> Value
     end.
 
 get_env(Key) ->
