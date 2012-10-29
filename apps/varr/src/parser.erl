@@ -27,7 +27,6 @@ process_json(Body) ->
 % gen_server calls
 
 handle_call({process_json, Body}, _From, State) ->
-    % io:format("~w~n", [self()]),
     {ok, Json} = json:decode(Body),
     {ok, Token} = token(Json),
     Json2 = update_token_info(Token, Json),

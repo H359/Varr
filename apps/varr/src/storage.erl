@@ -40,7 +40,7 @@ handle_call(_Message, _From, Redis) ->
   {reply, error, Redis}.
 
 handle_cast({save_value, Key, Value}, Redis) ->
-  eredis:q(Redis, ["SET", Key, Value]),
+  _Response = eredis:q(Redis, ["SET", Key, Value]),
   {noreply, Redis};
 
 handle_cast(_Meesage, Redis) ->
