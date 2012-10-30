@@ -10,26 +10,10 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    SockJSState = sockjs_handler:init_state(<<"/store">>, fun toppage_handler:process_ws/3, state, []),
+    SockJSState = sockjs_handler:init_state(<<"/">>, fun toppage_handler:process_ws/3, state, []),
     Dispatch = [
         {'_', [
-            {[<<"store">>, '...'], sockjs_cowboy_handler, SockJSState},
-            {[<<"top">>], toppage_handler, []},
-            {['...'], cowboy_static, [
-                {directory, {priv_dir, varr, [<<"www">>]}},
-                {mimetypes, [
-                    {<<".htm">>, [<<"text/html">>]},
-                    {<<".html">>, [<<"text/html">>]},
-                    {<<".css">>, [<<"text/css">>]},
-                    {<<".js">>, [<<"application/x-javascript">>]},
-                    {<<".jpeg">>, [<<"image/jpeg">>]},
-                    {<<".jpg">>, [<<"image/jpeg">>]},
-                    {<<".ico">>, [<<"image/x-icon">>]},
-                    {<<".gif">>, [<<"image/gif">>]},
-                    {<<".png">>, [<<"image/png">>]},
-                    {<<".swf">>, [<<"application/x-shockwave-flash">>]}
-                ]}
-            ]}
+            {'_', sockjs_cowboy_handler, SockJSState}
         ]}
     ],
     Port = varr:get_env(http_port, 8080),
