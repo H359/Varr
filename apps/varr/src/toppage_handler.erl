@@ -13,6 +13,8 @@
 init(_Transport, Req, []) ->
     {Upgrade, Req1} = cowboy_req:header(<<"upgrade">>, Req),
     case Upgrade of
+        <<"websocket">> ->
+            {upgrade, protocol, cowboy_websocket};
         <<"Websocket">> ->
             {upgrade, protocol, cowboy_websocket};
         undefined ->
@@ -43,8 +45,8 @@ websocket_init(_Transport, Req, _Opts) ->
     {ok, Req, undefined_state}.
 
 websocket_handle({text, Msg}, Req, State) ->
-    store(<<"WEBSOCKET">>, Msg, Req),
-    {reply, {text, <<"OK">>}, Req, State}; %don't like the magic "WEBSOCKET" here; TODO: find a suitable approach
+    Token = store(websocket, Msg, Req),
+    {reply, {text, <<Token>>}, Req, State}; 
 
 websocket_handle(_Data, Req, State) ->
     {ok, Req, State}.
@@ -76,8 +78,10 @@ store(<<"POST">>, Data, Req) ->
     cowboy_req:reply(200,
         [{<<"Content-Encoding">>, <<"utf-8">>}], <<"OK">>, Req); %TODO: form and send reply
 
-store(<<"WEBSOCKET">>, Data, _Req) ->
-    _Json = hottub:call(parser, {process_json, Data});
+store(websocket, Data, _Req) ->
+    Token = hottub:call(parser, {process_json, Data}),
+    {ok, Encoded} = json:encode(Token),
+    Encoded;
 
 store(_, _, Req) ->
     %% Method not allowed.

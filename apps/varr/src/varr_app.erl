@@ -10,10 +10,11 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-    SockJSState = sockjs_handler:init_state(<<"/">>, fun toppage_handler:process_ws/3, state, []),
+    SockJSState = sockjs_handler:init_state(<<"/store">>, fun toppage_handler:process_ws/3, state, []),
     Dispatch = [
         {'_', [
-            {'_', sockjs_cowboy_handler, SockJSState}
+            {[<<"store">>, '...'], sockjs_cowboy_handler, SockJSState},
+            {'_', toppage_handler, []}
         ]}
     ],
     Port = varr:get_env(http_port, 8080),
