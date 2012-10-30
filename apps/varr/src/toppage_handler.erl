@@ -61,8 +61,9 @@ process_ws(_Conn, init, state) ->
     {ok, state};
 
 process_ws(Conn, {recv, Data}, state) ->
-    _Json = hottub:call(parser, {process_json, Data}),
-    Conn:send(<<"ok">>);
+    Token = hottub:call(parser, {process_json, Data}),
+    {ok, Encoded} = json:encode(Token),
+    Conn:send(<<Token>>);
 
 process_ws(_Conn, closed, state) ->
     {ok, state}.

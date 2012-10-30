@@ -32,7 +32,7 @@ handle_call({process_json, Body}, _From, State) ->
     Json2 = update_token_info(Token, Json),
     Json3 = update_time_info(Json2),
     storage:save_value(generate_token(), json:encode(Json3)),
-    {reply, Json3, State};
+    {reply, Token, State};
 
 handle_call(_Message, _From, State) ->
   {reply, error, State}.
