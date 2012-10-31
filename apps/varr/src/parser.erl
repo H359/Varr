@@ -55,7 +55,7 @@ generate_token() ->
 update_time_info({Json}) ->
     {{Yr, Mt, Dy},{H, M, S}} = {date(), time()},
     NewValue = [Yr, Mt, Dy, H, M, S],
-    {orddict:update(<<"server_time">>, fun(_) -> NewValue end, NewValue, Json)}.
+    {orddict:update(<<"serverTime">>, fun(_) -> NewValue end, NewValue, Json)}.
 
 % additional functions
 
