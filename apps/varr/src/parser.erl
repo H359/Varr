@@ -31,7 +31,7 @@ handle_call({process_json, Body}, _From, State) ->
     {ok, Token} = token(Json),
     Json2 = update_token_info(Token, Json),
     Json3 = update_time_info(Json2),
-    storage:save_value(generate_token(), json:encode(Json3)),
+    storage:save_value_set(json:encode(Json3)),
     {reply, Token, State};
 
 handle_call(_Message, _From, State) ->
@@ -42,7 +42,7 @@ handle_call(_Message, _From, State) ->
 token({Json}) -> 
     Result = proplists:get_value(<<"token">>, Json),
     case Result of
-        undefined -> {ok, generate_token()};
+        undefined -> {ok, list_to_binary(generate_token())};
         _ -> {ok, Result}
     end.
 

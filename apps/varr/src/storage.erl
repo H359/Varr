@@ -29,21 +29,32 @@ stop() ->
 save_value(Key, Value) ->
   gen_server:cast(?MODULE, {save_value, Key, Value}).
 
+save_value_set(Value) ->
+  gen_server:cast(?MODULE, {save_value_set, Value}).
+
 %% genserver handles
 
 % handle_call({get_value, Api, Method}, _From, Redis) ->
 %   Response = eredis:q(Redis, ["GET", get_key(Api, Method)]),
 %   {reply, Response, Redis};
 
-handle_call({save_value, Key, Value}, _From, Redis) ->
+handle_call({save_value, Key, {ok, Value}}, _From, Redis) ->
   Response = eredis:q(Redis, ["SET", Key, Value]),
+  {reply, Response, Redis};
+
+handle_call({save_value_set, {ok, Value}}, _From, Redis) ->
+  Response = eredis:q(Redis, ["SADD", "VarrStats", Value]),
   {reply, Response, Redis};
 
 handle_call(_Message, _From, Redis) ->
   {reply, error, Redis}.
 
-handle_cast({save_value, Key, Value}, Redis) ->
+handle_cast({save_value, Key, {ok, Value}}, Redis) ->
   _Response = eredis:q(Redis, ["SET", Key, Value]),
+  {noreply, Redis};
+
+handle_cast({save_value_set, {ok, Value}}, _From, Redis) ->
+  _Response = eredis:q(Redis, ["SADD", "VarrStats", Value]),
   {noreply, Redis};
 
 handle_cast(_Meesage, Redis) ->

@@ -62,10 +62,10 @@ websocket_terminate(_Reason, _Req, _State) ->
 process_ws(_Conn, init, state) ->
     {ok, state};
 
-process_ws(Conn, {received, Data}, state) ->
+process_ws(Conn, {recv, Data}, state) ->
     Token = hottub:call(parser, {process_json, Data}),
     {ok, Encoded} = json:encode(Token),
-    Conn:send(<<Encoded>>);
+    Conn:send(Encoded);
 
 process_ws(_Conn, closed, state) ->
     {ok, state}.
