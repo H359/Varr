@@ -53,7 +53,7 @@ handle_cast({save_value, Key, {ok, Value}}, Redis) ->
   _Response = eredis:q(Redis, ["SET", Key, Value]),
   {noreply, Redis};
 
-handle_cast({save_value_set, {ok, Value}}, _From, Redis) ->
+handle_cast({save_value_set, {ok, Value}}, Redis) ->
   _Response = eredis:q(Redis, ["SADD", "VarrStats", Value]),
   {noreply, Redis};
 
