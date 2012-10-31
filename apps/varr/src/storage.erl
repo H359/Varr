@@ -12,7 +12,10 @@ start_link() ->
   gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 init([]) ->
-  {ok, Redis} = eredis:start_link(),
+  Host = varr:get_env(redis_host, "127.0.0.1"),
+  Port = varr:get_env(redis_port, 6379),
+  Db = varr:get_env(redis_db, 3),
+  {ok, Redis} = eredis:start_link(Host, Port, Db),
   {ok, Redis}.
 
 stop(_Pid) ->
