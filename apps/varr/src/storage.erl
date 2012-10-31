@@ -4,7 +4,7 @@
 
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, terminate/2, handle_info/2, code_change/3, stop/1]).
--export([save_value/2]).
+-export([save_value/2, save_value_set/1]).
 
 % public api
 
