@@ -15,7 +15,11 @@ init([]) ->
   Host = varr:get_env(redis_host, "127.0.0.1"),
   Port = varr:get_env(redis_port, 6379),
   Db = varr:get_env(redis_db, 3),
-  {ok, Redis} = eredis:start_link(Host, Port, Db),
+  Password = varr:get_env(redis_pass, none),
+  case Password of
+    none -> {ok, Redis} = eredis:start_link(Host, Port, Db);
+    Pass -> {ok, Redis} = eredis:start_link(Host, Port, Db, Password)
+  end,  
   {ok, Redis}.
 
 stop(_Pid) ->
