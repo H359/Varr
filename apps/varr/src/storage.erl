@@ -18,7 +18,7 @@ init([]) ->
   Password = varr:get_env(redis_pass, none),
   case Password of
     none -> {ok, Redis} = eredis:start_link(Host, Port, Db);
-    Pass -> {ok, Redis} = eredis:start_link(Host, Port, Db, Password)
+    _Pass -> {ok, Redis} = eredis:start_link(Host, Port, Db, Password)
   end,  
   {ok, Redis}.
 
@@ -61,7 +61,7 @@ handle_cast({save_value_set, {ok, Value}}, Redis) ->
   _Response = eredis:q(Redis, ["SADD", "VarrStats", Value]),
   {noreply, Redis};
 
-handle_cast(_Meesage, Redis) ->
+handle_cast(_Message, Redis) ->
   {noreply, Redis}.
 
 handle_info(_Message, Redis) -> {noreply, Redis}.

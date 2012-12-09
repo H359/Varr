@@ -5,7 +5,7 @@
 -export([start_link/0]).
 -export([init/1, handle_call/3, handle_cast/2, terminate/2, handle_info/2, code_change/3, stop/1]).
 
--export([process_json/1]).
+-export([process_json/1, process_json_tcp/1]).
 
 start_link() ->
   gen_server:start_link(?MODULE, [], []).
@@ -24,6 +24,8 @@ stop() ->
 process_json(Body) ->
     gen_server:call(?MODULE, {process_json, Body}).
 
+process_json_tcp(Body) ->
+    gen_server:call(?MODULE, {process_json_tcp, Body}).
 % gen_server calls
 
 handle_call({process_json, Body}, _From, State) ->
@@ -32,6 +34,14 @@ handle_call({process_json, Body}, _From, State) ->
     Json2 = update_token_info(Token, Json),
     Json3 = update_time_info(Json2),
     storage:save_value_set(json:encode(Json3)),
+    {reply, Token, State};
+
+handle_call({process_json_tcp, Body}, _From, State) ->
+    {ok, Json} = json:decode(Body),
+    {ok, Token} = token(Json),
+    Json2 = update_token_info(Token, Json),
+    Json3 = update_time_info(Json2),
+    hottub:cast(tcp_storage, {save_value, json:encode(Json3)}),
     {reply, Token, State};
 
 handle_call(_Message, _From, State) ->
