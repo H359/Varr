@@ -45,7 +45,11 @@ handle_call(_Message, _From, Sender) ->
   {reply, error, Sender}.
 
 handle_cast({save_value, {ok, Value}}, Sender) ->
-  ok = gen_tcp:send(Sender, Value),
+  Result = gen_tcp:send(Sender, Value),
+  case Result of
+    ok -> ok;
+    Error -> io:format("Error while sending occured: ~p~n", [Error])
+  end,
   {noreply, Sender};
 
 handle_cast(_Message, Sender) ->
