@@ -8,7 +8,8 @@
              varr_app,
              varr_sup,
              storage,
-             storage_sup
+             storage_sup,
+             tcp_storage
             ]},
   {applications, [
                   kernel,
