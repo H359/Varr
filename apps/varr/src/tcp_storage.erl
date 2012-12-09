@@ -16,9 +16,11 @@ init([]) ->
   Port = varr:get_env(tcp_storage_port, 9123),
   Result = gen_tcp:connect(Host, Port, [binary, {packet, 0}]),
   case Result of
-    {ok, Sender} -> Result;
+    {ok, Sender} -> 
+      io:format("Connected OK: ~p~n", [Result]),
+      Result;
     {error, Error} -> 
-      io:format("Error occured while connecting"),
+      io:format("Error occured while connecting~n", []),
       Result
   end.
 
