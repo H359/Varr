@@ -14,6 +14,7 @@ start_link() ->
 init([]) ->
   Host = varr:get_env(redis_host, "127.0.0.1"),
   Port = varr:get_env(tcp_storage_port, 9123),
+  io:format("attempting connection~n", []),
   Result = gen_tcp:connect(Host, Port, [binary, {packet, 0}]),
   case Result of
     {ok, Sender} -> 
