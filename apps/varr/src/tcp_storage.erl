@@ -12,21 +12,21 @@ start_link() ->
   gen_server:start_link(?MODULE, [], []).
 
 init(Args) ->
-  % io:format("init called ~p~n", [Args]),
+  io:format("init called ~p~n", [Args]),
   Host = varr:get_env(tcp_storage_host, "127.0.0.1"),
   Port = varr:get_env(tcp_storage_port, 9123),
-  % io:format("attempting connection~n", []),
+  io:format("attempting connection~n", []),
   Result = gen_tcp:connect(Host, Port, [binary, {packet, 0}]),
   % uncomment lines 21-28 and comment out line 29 to see if connection errors occur
-  % case Result of
-  %   {ok, _Sender} -> 
-  %     io:format("Connected OK: ~p~n", [Result]),
-  %     Result;
-  %   {error, _Error} -> 
-  %     io:format("Error occured while connecting~n", []),
-  %     Result
-  % end.
-  Result.
+  case Result of
+    {ok, _Sender} -> 
+      io:format("Connected OK: ~p~n", [Result]),
+      Result;
+    {error, Error} -> 
+      io:format("Error occured while connecting ~p~n", [Error]),
+      Result
+  end.
+  % Result.
 
 stop(_Pid) ->
   stop().
