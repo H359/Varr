@@ -26,7 +26,7 @@ start(_StartType, _StartArgs) ->
     TcpPoolSize = varr:get_env(tcp_storage_pool_size, 10),
     hottub:start_link(tcp_storage, TcpPoolSize, tcp_storage, start_link, []),
     % storage_sup:start_link(),
-    uuid_server_sup:start(),
+    uuid_server_sup:start_link(),
     % session_server:start(),
     varr_sup:start_link().
 

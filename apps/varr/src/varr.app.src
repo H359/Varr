@@ -7,10 +7,10 @@
              varr,
              varr_app,
              varr_sup,
-             storage,
-             storage_sup,
+             parser,
              tcp_storage,
-             uuid_server
+             uuid_server,
+             uuid_server_sup
             ]},
   {applications, [
                   kernel,

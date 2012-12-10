@@ -2,12 +2,12 @@
 
 -behaviour(gen_server).
 
--export([start/0, gen/0]).
+-export([start_link/0, gen/0]).
 
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
-start() ->
-    gen_server:start(?MODULE, [], []).
+start_link() ->
+    gen_server:start_link(?MODULE, [], []).
 
 gen() ->
     gen_server:call(?MODULE, {gen}).
@@ -15,7 +15,7 @@ gen() ->
 init([]) ->
     {ok, {}}.
 
-handle_call({gen}, From, State) ->
+handle_call({gen}, _From, State) ->
     Reply = uuid:to_string(uuid:v4()),
     {reply, Reply, State}.
 
