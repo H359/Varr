@@ -48,7 +48,7 @@ handle_cast({save_value, {ok, Value}}, Sender) ->
   Result = gen_tcp:send(Sender, Value),
   case Result of
     ok -> 
-      io:format("Sent data successfully~n", []),
+      io:format("Sent data successfully ~p~n", [erlang:time()]),
       gen_tcp:send(Sender, <<"\r\n\r\n">>),
       {noreply, Sender};
     Error -> 
