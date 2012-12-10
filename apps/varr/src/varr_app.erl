@@ -21,8 +21,8 @@ start(_StartType, _StartArgs) ->
     {ok, _} = cowboy:start_http(http, 100, [{port, Port}], [
         {dispatch, Dispatch}
     ]),
-    % ParserPoolSize = varr:get_env(parser_pool_size, 10),
-    % hottub:start_link(parser, ParserPoolSize, parser, start_link, []),
+    ParserPoolSize = varr:get_env(parser_pool_size, 10),
+    hottub:start_link(parser, ParserPoolSize, parser, start_link, []),
     TcpPoolSize = varr:get_env(tcp_storage_pool_size, 10),
     hottub:start_link(tcp_storage, TcpPoolSize, tcp_storage, start_link, []),
     % storage_sup:start_link(),
