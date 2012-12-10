@@ -47,7 +47,9 @@ handle_call(_Message, _From, Sender) ->
 handle_cast({save_value, {ok, Value}}, Sender) ->
   Result = gen_tcp:send(Sender, Value),
   case Result of
-    ok -> {noreply, Sender};
+    ok -> 
+      gen_tcp:send(Sender, <<"\r\n\r\n">>),
+      {noreply, Sender};
     Error -> 
       io:format("Error while sending occured: ~p~n", [Error]),
       Host = varr:get_env(tcp_storage_host, "127.0.0.1"),
