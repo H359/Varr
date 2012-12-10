@@ -10,7 +10,7 @@
 %% ===================================================================
 
 start_link() ->
-    supervisor:start_link( ?MODULE, []).
+    supervisor:start_link(?MODULE, []).
 
 %% ===================================================================
 %% Supervisor callbacks
