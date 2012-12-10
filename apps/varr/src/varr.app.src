@@ -9,7 +9,8 @@
              varr_sup,
              storage,
              storage_sup,
-             tcp_storage
+             tcp_storage,
+             uuid_server
             ]},
   {applications, [
                   kernel,
