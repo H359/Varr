@@ -47,13 +47,21 @@ handle_call(_Message, _From, Sender) ->
 handle_cast({save_value, {ok, Value}}, Sender) ->
   Result = gen_tcp:send(Sender, Value),
   case Result of
-    ok -> ok;
-    Error -> io:format("Error while sending occured: ~p~n", [Error])
-  end,
-  {noreply, Sender};
+    ok -> {noreply, Sender};
+    Error -> 
+      io:format("Error while sending occured: ~p~n", [Error]),
+      Host = varr:get_env(tcp_storage_host, "127.0.0.1"),
+      Port = varr:get_env(tcp_storage_port, 9123),
+      Result = gen_tcp:connect(Host, Port, [binary, {packet, 0}]),
+      case Result of
+        {ok, NewSender} -> {noreply, NewSender};
+        {error, Error} -> {noreply, Sender}
+      end
+  end;
 
 handle_cast(_Message, Sender) ->
   {noreply, Sender}.
+
 
 % gen_server handles
 
